@@ -7,6 +7,7 @@ import java.util.Scanner;
  */
 public class Simulator {
 
+    static CPUImp cpu = new CPUImp();
     static KernelImp kernel = new KernelImp();
     static SystemTimerImp timer = new SystemTimerImp();
 
@@ -39,6 +40,12 @@ public class Simulator {
             System.exit(1);
         }
         System.out.println("completed " + timer.getSystemTime());
+    }
+
+    public static void runSimulation(){
+        while(!(eventQueue.isEmpty() && cpu.isIdle())){
+
+        }
     }
 
     public static void main(String[] args) {
