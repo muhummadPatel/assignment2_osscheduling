@@ -29,6 +29,8 @@ public class Simulator {
                     }else if(data[0].equalsIgnoreCase("PROGRAM")){
                         //create load program evt and insert into evt queue
                         eventQueue.add(new ExecveEvent(Long.parseLong(data[1]), data[2]));
+                        System.out.println("Execve evt added to queue." + eventQueue.peek());
+                        System.out.println("Qsiz: " + eventQueue.size());
                     }
                 }
             }
@@ -43,8 +45,11 @@ public class Simulator {
     }
 
     public static void runSimulation(){
+        System.out.println("\n\n\nLOOOOOOOOPPPPP");
         while(!(eventQueue.isEmpty() && cpu.isIdle())){
+            System.out.println("looop. ");
 
+            eventQueue.poll();
         }
     }
 
@@ -55,5 +60,6 @@ public class Simulator {
         double dispatchOverhead = Double.parseDouble(args[2]);
 
         setUp(configFilename);
+        runSimulation();
     }
 }

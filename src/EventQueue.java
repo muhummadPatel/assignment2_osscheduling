@@ -45,4 +45,8 @@ public class EventQueue {
      * Determine if queue is empty.
      */
     public boolean isEmpty() { return queue.isEmpty(); }
+
+    public int size(){
+        return queue.size();
+    }
 }
