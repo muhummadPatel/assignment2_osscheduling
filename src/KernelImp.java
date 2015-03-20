@@ -18,26 +18,26 @@ public class KernelImp implements Kernel {
     @Override
     public int syscall(int number, Object... varargs) {
         switch(number){
-            case 1:
-                //TODO: MAKE_DEVICE
+            case MAKE_DEVICE:
                 IODeviceImp dev = new IODeviceImp(Integer.parseInt((String) varargs[0]), (String)varargs[1]);
                 System.out.println(dev);
                 deviceQueues.put(dev.getID(), new LinkedList<Integer>());
                 System.out.println(deviceQueues.size());
                 break;
-            case 2:
+            case EXECVE:
                 //TODO: EXECVE
                 break;
-            case 3:
+            case IO_REQUEST:
                 //TODO: IO_REQUEST
                 break;
-            case 4:
+            case TERMINATE_PROCESS:
                 //TODO: TERMINATE PROCESS
                 break;
             default:
                 return 1;
         }
 
+        Simulator.timer.advanceKernelTime(SystemTimer.SYSCALL_COST);
         return 0;
     }
 }

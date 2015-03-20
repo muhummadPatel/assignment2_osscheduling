@@ -7,9 +7,12 @@ import java.util.Scanner;
  */
 public class Simulator {
 
-    private KernelImp kernel = new KernelImp();
+    static KernelImp kernel = new KernelImp();
+    static SystemTimerImp timer = new SystemTimerImp();
 
-    public void setUp(String configFilename){
+    static EventQueue eventQueue = new EventQueue();
+
+    public static void setUp(String configFilename){
         try {
             Scanner infile = new Scanner(new FileReader(configFilename));
 
@@ -20,31 +23,30 @@ public class Simulator {
                     String[] data = line.split("\\s+");
 
                     if(data[0].equalsIgnoreCase("I/O")){
-                        //TODO: make_device syscall to kernel
-                        kernel.syscall(1, data[1], data[2]);
+                        //MAKE_DEVICE system call to kernel
+                        kernel.syscall(SystemCall.MAKE_DEVICE, data[1], data[2]);
                     }else if(data[0].equalsIgnoreCase("PROGRAM")){
-                        //TODO: create load program evt and insert into evt queue
+                        //create load program evt and insert into evt queue
+                        eventQueue.add(new ExecveEvent(Long.parseLong(data[1]), data[2]));
                     }
                 }
             }
+
+            timer.setSystemTime(0);
 
         }catch(FileNotFoundException e){
             System.out.println(e.getMessage() + "\nError opening file.");
             System.exit(1);
         }
-
+        System.out.println("completed " + timer.getSystemTime());
     }
 
-    public Simulator(String[] args){
+    public static void main(String[] args) {
         //TODO: handle invalid args here
         String configFilename = args[0];
         double sliceLength = Double.parseDouble(args[1]);
         double dispatchOverhead = Double.parseDouble(args[2]);
 
         setUp(configFilename);
-    }
-
-    public static void main(String[] args) {
-        new Simulator(args);
     }
 }
