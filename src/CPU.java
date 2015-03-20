@@ -37,11 +37,6 @@ public interface CPU {
      * @return the previously executing process.
      */
     ProcessControlBlock contextSwitch(ProcessControlBlock process);
-    
-    /**
-     * Obtain the PCB of the currently  executing process
-     */
-    ProcessControlBlock currentProcesss();
 
     /**
      * Determine whether the CPU is idle (<code>currentProcess()==null</code>).
