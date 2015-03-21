@@ -1,0 +1,17 @@
+# spice.dat
+# A program with fairly balanced CPU and IO requests.
+CPU 2
+IO 2
+CPU 3
+IO 3
+CPU 1
+IO 1
+CPU 5
+IO 5
+CPU 3
+IO 3
+CPU 1
+IO 1
+CPU 12
+IO 12
+CPU 3

@@ -1,0 +1,17 @@
+# firefox.dat
+# A program with relatively high I/O demands compared to CPU time.
+CPU 2
+IO 2
+CPU 3
+IO 5
+CPU 1
+IO 4
+CPU 2
+IO 2
+CPU 3
+IO 5
+CPU 1
+IO 4
+CPU 2
+IO 2
+CPU 3
