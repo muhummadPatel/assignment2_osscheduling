@@ -12,8 +12,8 @@ public class IOInstruction extends Instruction {
     /**
      * Create an IOInstruction of the given duration for the given process and IO device.
      */
-    public IOInstruction(int duration, ProcessControlBlock parent, int deviceID) {
-        super(duration, parent);
+    public IOInstruction(int duration, int deviceID) {
+        super(duration);
         this.deviceID = deviceID;
     }
     

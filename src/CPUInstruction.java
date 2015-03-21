@@ -10,7 +10,7 @@ public class CPUInstruction extends Instruction {
 
     private int burstRemaining;
     
-    public CPUInstruction(int duration, ProcessControlBlock parent) { super(duration, parent); }
+    public CPUInstruction(int duration) { super(duration); }
     
     /**
      * Obtain execution time required to complete this cpu burst.
