@@ -41,6 +41,11 @@ public class ProcessControlBlockImp implements ProcessControlBlock {
         programCounter++;
     }
 
+    @Override
+    public boolean hasNextInstruction() {
+        return (!this.instructions.isEmpty());
+    }
+
     public void addInstruction(Instruction instruction){
         this.instructions.add(instruction);
     }

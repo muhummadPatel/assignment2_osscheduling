@@ -34,6 +34,8 @@ public interface ProcessControlBlock {
      * Advance to next instruction.
      */
     void nextInstruction();
+
+    boolean hasNextInstruction();
     
     /**
      * Obtain process state.
