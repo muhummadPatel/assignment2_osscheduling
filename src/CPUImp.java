@@ -3,7 +3,7 @@
  */
 public class CPUImp implements CPU {
 
-    ProcessControlBlockImp currentProcess;
+    ProcessControlBlock currentProcess;
 
     public CPUImp(){
         //currentProcess = null;
@@ -21,7 +21,10 @@ public class CPUImp implements CPU {
 
     @Override
     public ProcessControlBlock contextSwitch(ProcessControlBlock process) {
-        return null;
+        ProcessControlBlock switchedOut = this.currentProcess;
+        currentProcess = process;
+
+        return switchedOut;
     }
 
     @Override
