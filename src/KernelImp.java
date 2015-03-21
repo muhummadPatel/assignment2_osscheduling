@@ -67,9 +67,11 @@ public class KernelImp implements Kernel {
                 break;
             case IO_REQUEST:
                 //TODO: IO_REQUEST
+                System.out.println("syscall IO REQ");
                 break;
             case TERMINATE_PROCESS:
                 //TODO: TERMINATE PROCESS
+                System.out.println("syscall TERMINATE PROC");
                 break;
             default:
                 return 1;
