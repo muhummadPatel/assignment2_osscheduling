@@ -6,7 +6,7 @@ public class CPUImp implements CPU {
     ProcessControlBlock currentProcess;
 
     public CPUImp(){
-        //currentProcess = null;
+        currentProcess = null;
     }
 
     @Override
@@ -16,7 +16,26 @@ public class CPUImp implements CPU {
 
     @Override
     public int execute(int timeUnits) {
-        return 0;
+        Instruction currentInstruction = currentProcess.getInstruction();
+        if(currentInstruction instanceof CPUInstruction){
+            int remaining = Math.abs(((CPUInstruction) currentInstruction).execute(timeUnits));
+            if(remaining < 0){
+                //completed
+                if(currentProcess.hasNextInstruction()){
+                    //has next
+                    currentProcess.nextInstruction();
+                    IOInstruction ioInstruction = (IOInstruction)currentProcess.getInstruction();
+                    Simulator.kernel.syscall(SystemCall.IO_REQUEST, ioInstruction.getDeviceID(), ioInstruction.getDuration());
+                }else{
+                    //no next
+                    Simulator.kernel.syscall(SystemCall.TERMINATE_PROCESS);
+                }
+            }else{
+                //cant complete
+            }
+        }
+
+        return timeUnits;
     }
 
     @Override
