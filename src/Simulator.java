@@ -18,20 +18,16 @@ public class Simulator {
             Scanner infile = new Scanner(new FileReader(configFilename));
 
             while(infile.hasNext()){
-                String line = infile.nextLine().trim();
+                String[] data = infile.nextLine().trim().split("\\s+");
 
-                if(line.charAt(0) != '#') {
-                    String[] data = line.split("\\s+");
-
-                    if(data[0].equalsIgnoreCase("I/O")){
-                        //MAKE_DEVICE system call to kernel
-                        kernel.syscall(SystemCall.MAKE_DEVICE, data[1], data[2]);
-                    }else if(data[0].equalsIgnoreCase("PROGRAM")){
-                        //create load program evt and insert into evt queue
-                        eventQueue.add(new ExecveEvent(Long.parseLong(data[1]), data[2]));
-                        System.out.println("Execve evt added to queue." + eventQueue.peek());
-                        System.out.println("Qsiz: " + eventQueue.size());
-                    }
+                if(data[0].equalsIgnoreCase("I/O") || data[0].equalsIgnoreCase("I/O")){
+                    //MAKE_DEVICE system call to kernel
+                    kernel.syscall(SystemCall.MAKE_DEVICE, data[1], data[2]);
+                }else if(data[0].equalsIgnoreCase("PROGRAM")){
+                    //create load program evt and insert into evt queue
+                    eventQueue.add(new ExecveEvent(Long.parseLong(data[1]), data[2]));
+                    System.out.println("Execve evt added to queue." + eventQueue.peek());
+                    System.out.println("Qsiz: " + eventQueue.size());
                 }
             }
 
@@ -49,7 +45,7 @@ public class Simulator {
         while(!(eventQueue.isEmpty() && cpu.isIdle())){
             System.out.println("looop. ");
 
-            eventQueue.poll();
+            eventQueue.poll().process();
         }
     }
 
