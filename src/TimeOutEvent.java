@@ -25,5 +25,6 @@ public class TimeOutEvent extends Event {
     @Override
     public void process() {
         System.out.println("process timeoutevt");
+        Simulator.kernel.interrupt(InterruptHandler.TIME_OUT, process.getPID());
     }
 }

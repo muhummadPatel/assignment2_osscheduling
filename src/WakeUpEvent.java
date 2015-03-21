@@ -32,5 +32,6 @@ public class WakeUpEvent extends Event {
     @Override
     public void process() {
         System.out.println("process wakeupevt");
+        Simulator.kernel.interrupt(InterruptHandler.WAKE_UP, device.getID(), process.getPID());
     }
 }
