@@ -7,13 +7,17 @@ import java.util.Scanner;
  */
 public class Simulator {
 
-    static CPUImp cpu = new CPUImp();
-    static KernelImp kernel = new KernelImp();
-    static SystemTimerImp timer = new SystemTimerImp();
+    static CPUImp cpu;
+    static Kernel kernel;
+    static SystemTimer timer;
+    static EventQueue eventQueue;
 
-    static EventQueue eventQueue = new EventQueue();
+    public static void setUp(String configFilename, int sliceLength){
+        cpu = new CPUImp();
+        kernel = new KernelImp(sliceLength);
+        timer = new SystemTimerImp();
+        eventQueue = new EventQueue();
 
-    public static void setUp(String configFilename){
         try {
             Scanner infile = new Scanner(new FileReader(configFilename));
 
@@ -52,10 +56,10 @@ public class Simulator {
     public static void main(String[] args) {
         //TODO: handle invalid args here
         String configFilename = args[0];
-        double sliceLength = Double.parseDouble(args[1]);
-        double dispatchOverhead = Double.parseDouble(args[2]);
+        int sliceLength = (int)Double.parseDouble(args[1]);
+        int dispatchOverhead =(int)Double.parseDouble(args[2]);
 
-        setUp(configFilename);
+        setUp(configFilename, sliceLength);
         runSimulation();
     }
 }

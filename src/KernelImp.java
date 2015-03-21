@@ -10,14 +10,29 @@ import java.util.Scanner;
  */
 public class KernelImp implements Kernel {
 
+    private int timeslice;
+
     //<device id, queue of pids waiting for device with device id>
     private HashMap<Integer, Queue<Integer>> deviceQueues = new HashMap<Integer, Queue<Integer>>();
     private Queue<ProcessControlBlock> ready = new LinkedList<ProcessControlBlock>();
 
 
+    public KernelImp(int timeslice){
+        this.timeslice = timeslice;
+    }
+
     @Override
     public void interrupt(int interruptType, Object... varargs) {
-
+        switch(interruptType){
+            case InterruptHandler.TIME_OUT:
+                ProcessControlBlock switchedIn = ready.poll();
+                ProcessControlBlock switchedOut = Simulator.cpu.contextSwitch(switchedIn);
+                ready.add(switchedOut);
+                Simulator.timer.scheduleInterrupt(timeslice, switchedIn.getPID());
+                break;
+            case InterruptHandler.WAKE_UP:
+                break;
+        }
     }
 
     @Override
