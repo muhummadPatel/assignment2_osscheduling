@@ -29,4 +29,8 @@ public class WakeUpEvent extends Event {
      */
     public ProcessControlBlock getProcess() { return process; }
 
+    @Override
+    public void process() {
+        System.out.println("process wakeupevt");
+    }
 }

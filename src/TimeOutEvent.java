@@ -21,5 +21,9 @@ public class TimeOutEvent extends Event {
      * Obtain the process to switched out as a result of this execution timeout.
      */
     public ProcessControlBlock getProcess() { return process; }
-        
+
+    @Override
+    public void process() {
+        System.out.println("process timeoutevt");
+    }
 }

@@ -21,7 +21,12 @@ public class ExecveEvent extends Event {
     public String getProgramName() {
         return progName;
     }
-    
+
+    @Override
+    public void process() {
+        Simulator.kernel.syscall(SystemCall.EXECVE, progName);
+    }
+
     public String toString() { return "ExecveEvent("+this.getTime()+", "+this.getProgramName()+")"; }
 
 }

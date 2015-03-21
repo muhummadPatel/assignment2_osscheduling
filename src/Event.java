@@ -18,6 +18,8 @@ public abstract class Event {
      * Obtain the system time at which this event is due to occur.
      */
     public long getTime() { return time; }
+
+    public abstract void process();
         
     public String toString() { return "Event("+getTime()+")"; }
 }
