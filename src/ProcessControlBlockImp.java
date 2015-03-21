@@ -13,21 +13,22 @@ public class ProcessControlBlockImp implements ProcessControlBlock {
     private State state;
 
     public ProcessControlBlockImp(String programName){
-        pid = count;
-        count++;
+        this.pid = count;
         this.programName = programName;
-        instructions = new LinkedList<Instruction>();
-        programCounter = 0;
+        this.instructions = new LinkedList<Instruction>();
+        this.programCounter = 0;
+
+        count++;
     }
 
     @Override
     public int getPID() {
-        return 0;
+        return pid;
     }
 
     @Override
     public String getProgramName() {
-        return null;
+        return programName;
     }
 
     @Override
@@ -40,6 +41,10 @@ public class ProcessControlBlockImp implements ProcessControlBlock {
         programCounter++;
     }
 
+    public void addInstruction(Instruction instruction){
+        this.instructions.add(instruction);
+    }
+
     @Override
     public State getState() {
         return state;
@@ -48,5 +53,10 @@ public class ProcessControlBlockImp implements ProcessControlBlock {
     @Override
     public void setState(State state) {
         this.state = state;
+    }
+
+    //TODO: remove
+    public int getNumInstructions(){
+        return instructions.size();
     }
 }
