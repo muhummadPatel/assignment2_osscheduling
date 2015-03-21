@@ -13,7 +13,7 @@ public class KernelImp implements Kernel {
     private int timeslice;
 
     //<device id, queue of pids waiting for device with device id>
-    private HashMap<Integer, Queue<Integer>> deviceQueues = new HashMap<Integer, Queue<Integer>>();
+    private HashMap<Integer, Queue<ProcessControlBlock>> deviceQueues = new HashMap<Integer, Queue<ProcessControlBlock>>();
     private Queue<ProcessControlBlock> ready = new LinkedList<ProcessControlBlock>();
 
 
@@ -31,6 +31,26 @@ public class KernelImp implements Kernel {
                 Simulator.timer.scheduleInterrupt(timeslice, switchedIn.getPID());
                 break;
             case InterruptHandler.WAKE_UP:
+                int deviceId = Integer.parseInt((String)varargs[0]);
+                int pid = Integer.parseInt((String)varargs[1]);
+
+                LinkedList<ProcessControlBlock> deviceQueue = (LinkedList<ProcessControlBlock>)deviceQueues.get(deviceId);
+                int pos = -1;
+                for(int i = 0; i < deviceQueue.size(); i++){
+                    ProcessControlBlock pcb = deviceQueue.get(i);
+                    if(pcb.getPID() == pid){
+                        pos = i;
+                        break;
+                    }
+                }
+
+                //TODO: some error checking?
+                if(pos != -1){
+                    ProcessControlBlock removed = deviceQueue.remove(pos);
+                    removed.nextInstruction();
+                    ready.add(removed);
+                }
+
                 break;
         }
     }
@@ -62,7 +82,7 @@ public class KernelImp implements Kernel {
     //TODO: make these return int?
     private void sys_make_device(int deviceId, String deviceType){
         IODeviceImp dev = new IODeviceImp(deviceId, deviceType);
-        deviceQueues.put(dev.getID(), new LinkedList<Integer>());
+        deviceQueues.put(dev.getID(), new LinkedList<ProcessControlBlock>());
 
         System.out.println(dev);
         System.out.println(deviceQueues.size());
