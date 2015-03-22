@@ -1,7 +1,7 @@
 # primescalculator.dat
 # A program with relatively high CPU demands compared to IO time.
 CPU 3
-IO 5
+IO 5 1
 CPU 10
-IO 2
+IO 2 1
 CPU 30
