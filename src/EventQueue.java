@@ -1,4 +1,5 @@
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.PriorityQueue;
 /**
  * Ordered Event queue for discrete event simulator.
@@ -48,5 +49,20 @@ public class EventQueue {
 
     public int size(){
         return queue.size();
+    }
+
+    public boolean removeTimeoutEvent(int pid){
+        Iterator it = queue.iterator();
+        boolean isRemoved = false;
+        while(it.hasNext()){
+            Event evt = (Event)it.next();
+            if(it instanceof TimeOutEvent && ((TimeOutEvent) it).getProcess().getPID() == pid){
+                System.out.println("Removed timeout event " + evt);
+                isRemoved = queue.remove(evt);
+                break;
+            }
+        }
+
+        return isRemoved;
     }
 }
