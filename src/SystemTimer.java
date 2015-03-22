@@ -57,7 +57,7 @@ public interface SystemTimer  {
      * Schedule a timer interrupt for <code>timeUnits</code> time units in the future 
      * for the given pricess.
      */
-    void scheduleInterrupt(int timeUnits, int processID);
+    void scheduleInterrupt(int timeUnits, ProcessControlBlock process);
     
     /**
      * Cancel timer interrupt for the given process.

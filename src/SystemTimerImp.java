@@ -53,12 +53,12 @@ public class SystemTimerImp implements SystemTimer {
     }
 
     @Override
-    public void scheduleInterrupt(int timeUnits, int processID) {
-        //TODO: scheduleinterrupt
+    public void scheduleInterrupt(int timeUnits, ProcessControlBlock process) {
+        Simulator.eventQueue.add(new TimeOutEvent(systemTime + timeUnits, process));
     }
 
     @Override
     public void cancelInterrupt(int processID) {
-        //TODO: cancel interrupt
+        Simulator.eventQueue.removeTimeoutEvent(processID);
     }
 }
