@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 /**
  * muhummad        15/03/19.
  */
@@ -6,6 +9,8 @@ public class IODeviceImp implements IODevice {
     private int id;
     private String name;
     private long freeTime;
+
+    LinkedList<ProcessControlBlock> deviceQueue = new LinkedList<ProcessControlBlock>();
 
     public IODeviceImp(){
         this(-1, "nulldev");
@@ -28,13 +33,20 @@ public class IODeviceImp implements IODevice {
     }
 
     @Override
-    public long getFreeTime() {
-        return freeTime;
-    }
+    public long getFreeTime() { return freeTime;}
 
     @Override
     public long requestIO(int duration, ProcessControlBlock process) {
-        return 0;
+        deviceQueue.add(process);
+
+        if(freeTime <= Simulator.timer.getSystemTime()){
+            //device is free now
+            freeTime = Simulator.timer.getSystemTime() + duration;
+        }else{
+            freeTime += duration;
+        }
+
+        return freeTime;
     }
 
     public String toString(){
