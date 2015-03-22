@@ -34,4 +34,15 @@ public class WakeUpEvent extends Event {
         System.out.println("process wakeupevt");
         Simulator.kernel.interrupt(InterruptHandler.WAKE_UP, device.getID(), process.getPID());
     }
+
+    @Override
+    public boolean equals(Object o){
+
+        if(o instanceof WakeUpEvent){
+            WakeUpEvent other = (WakeUpEvent)o;
+            return ((this.device == other.device) && (this.process.getPID() == other.process.getPID()) && (this.getTime() == other.getTime()));
+        }
+
+        return false;
+    }
 }

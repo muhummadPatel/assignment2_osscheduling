@@ -14,6 +14,7 @@ public class TimeOutEvent extends Event {
      */
     public TimeOutEvent(long systemTime, ProcessControlBlock process) {
         super(systemTime);
+        System.out.println("COnstructing timeoutevt for process " + process);
         this.process=process;
     }
     
@@ -24,7 +25,18 @@ public class TimeOutEvent extends Event {
 
     @Override
     public void process() {
-        System.out.println("process timeoutevt");
+        System.out.println("process timeoutevt for " + process );
         Simulator.kernel.interrupt(InterruptHandler.TIME_OUT, process.getPID());
+    }
+
+    @Override
+    public boolean equals(Object o){
+
+        if(o instanceof TimeOutEvent){
+            TimeOutEvent other = (TimeOutEvent)o;
+            return ((this.process.getPID() == other.process.getPID()) && (this.getTime() == other.getTime()));
+        }
+
+        return false;
     }
 }

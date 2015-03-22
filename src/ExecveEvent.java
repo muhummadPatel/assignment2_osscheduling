@@ -27,6 +27,17 @@ public class ExecveEvent extends Event {
         Simulator.kernel.syscall(SystemCall.EXECVE, progName);
     }
 
+    @Override
+    public boolean equals(Object o){
+
+        if(o instanceof ExecveEvent){
+            ExecveEvent other = (ExecveEvent)o;
+            return ((this.progName.equalsIgnoreCase(other.progName)) && (this.getTime() == other.getTime()));
+        }
+
+        return false;
+    }
+
     public String toString() { return "ExecveEvent("+this.getTime()+", "+this.getProgramName()+")"; }
 
 }

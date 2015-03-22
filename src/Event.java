@@ -20,6 +20,9 @@ public abstract class Event {
     public long getTime() { return time; }
 
     public abstract void process();
+
+    @Override
+    public abstract boolean equals(Object o);
         
     public String toString() { return "Event("+getTime()+")"; }
 }
