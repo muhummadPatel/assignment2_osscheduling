@@ -8,13 +8,13 @@ import java.util.Scanner;
 public class Simulator {
 
     static CPUImp cpu;
-    static Kernel kernel;
+    static KernelImp kernel;
     static SystemTimer timer;
     static EventQueue eventQueue;
 
     public static void setUp(String configFilename, int sliceLength){
-        cpu = new CPUImp();
         kernel = new KernelImp(sliceLength);
+        cpu = new CPUImp();
         timer = new SystemTimerImp();
         eventQueue = new EventQueue();
 
@@ -47,9 +47,17 @@ public class Simulator {
     public static void runSimulation(){
         System.out.println("\n\n\nLOOOOOOOOPPPPP");
         while(!(eventQueue.isEmpty() && cpu.isIdle())){
-            System.out.println("looop. ");
+            System.out.println("looopstart. ==================================");
 
-            eventQueue.poll().process();
+            Event nextEvent = eventQueue.poll();
+            if(nextEvent != null){
+                nextEvent.process();
+            }
+
+            //TODO: fix this madness
+            //int nextEventTime = (int)eventQueue.peek().getTime();
+            cpu.execute(5);
+            System.out.println("looopend. ==================================\n\n\n");
         }
     }
 
