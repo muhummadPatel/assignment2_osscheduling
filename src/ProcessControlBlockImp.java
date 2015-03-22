@@ -33,7 +33,9 @@ public class ProcessControlBlockImp implements ProcessControlBlock {
 
     @Override
     public Instruction getInstruction() {
-        return instructions.get(programCounter);
+        System.out.println(programName + " pc=" + programCounter);
+        Instruction instruction = instructions.get(programCounter);
+        return instruction;
     }
 
     @Override
@@ -42,8 +44,9 @@ public class ProcessControlBlockImp implements ProcessControlBlock {
     }
 
     @Override
-    public boolean hasNextInstruction() {
-        return (!this.instructions.isEmpty());
+    public boolean hasNextInstruction(){
+        int next = programCounter + 1;
+        return (!(next >= instructions.size()));
     }
 
     public void addInstruction(Instruction instruction){
@@ -61,7 +64,7 @@ public class ProcessControlBlockImp implements ProcessControlBlock {
     }
 
     //TODO: remove
-    public int getNumInstructions(){
+    public int getNumInstructions() {
         return instructions.size();
     }
 }
