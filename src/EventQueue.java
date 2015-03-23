@@ -28,7 +28,11 @@ public class EventQueue {
     /**
      * Insert an event in the queue.
      */
-    public void add(Event e) { queue.add(e);}
+    public void add(Event e) {
+        if(e != null){
+            queue.add(e);
+        }
+    }
     
     /**
      * View event at front of queue. 
