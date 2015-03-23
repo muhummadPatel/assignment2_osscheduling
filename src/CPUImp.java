@@ -16,27 +16,28 @@ public class CPUImp implements CPU {
 
     @Override
     public int execute(int timeUnits) {
+
+        int unusedTimeUnits = 0;
+
        if(currentProcess == null){
            //load next process if available
            ProcessControlBlock next = Simulator.kernel.nextProcess();
-           if(next == null){
-               //nothing in ready queue
-               return timeUnits;
-           }else{
-               //something to execute
+           if(next != null){
+               //something to execute, so switch it in
+               //TODO: if timing is off, try just doing this manually
                Simulator.cpu.contextSwitch(next);
-               //Simulator.timer.scheduleInterrupt(Simulator.kernel.timeslice, next);
-
            }
        }
 
         if(currentProcess != null) {
+            //we have a process to execute
             System.out.println("EXECUTE " + currentProcess.getProgramName());
 
-            Instruction currentInstruction = currentProcess.getInstruction();
-            int remaining = ((CPUInstruction) currentInstruction).execute(timeUnits);
-            if (remaining >= 0) {
-                //completed
+            int remainder = ((CPUInstruction) currentProcess.getInstruction()).execute(timeUnits);
+            System.out.println("Unused time = " + remainder);
+
+            if (remainder >= 0) {
+                //completed so move to next instruction
                 if (currentProcess.hasNextInstruction()) {
                     currentProcess.nextInstruction();
                     //has next
@@ -46,12 +47,20 @@ public class CPUImp implements CPU {
                     //no next
                     Simulator.kernel.syscall(SystemCall.TERMINATE_PROCESS);
                 }
+
+                unusedTimeUnits = remainder;
+            }else{
+                unusedTimeUnits = 0;
             }
-            return timeUnits - Math.abs(remaining);
+
         }else{
             System.out.println("nothing to execute.");
+            //TODO: increment idle time here?
+            unusedTimeUnits = timeUnits;
         }
-        return timeUnits;
+
+        Simulator.timer.advanceUserTime(timeUnits - unusedTimeUnits);
+        return unusedTimeUnits;
     }
 
     @Override
