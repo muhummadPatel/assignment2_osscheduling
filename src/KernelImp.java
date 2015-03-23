@@ -20,12 +20,28 @@ public class KernelImp implements Kernel {
 
     @Override
     public void interrupt(int interruptType, Object... varargs) {
+        //TODO: break these out into methods
         switch(interruptType){
             case InterruptHandler.TIME_OUT:
-                ProcessControlBlock switchedIn = ready.poll();
-                ProcessControlBlock switchedOut = Simulator.cpu.contextSwitch(switchedIn);
-                ready.add(switchedOut);
-                Simulator.timer.scheduleInterrupt(timeslice, switchedIn);
+//                if (ready.isEmpty()) {
+//                    // Given current process another slice.
+//                    ProcessControlBlock current = Simulator.cpu.getCurrentProcess();
+//                    Simulator.cpu.contextSwitch(current);
+//                    Simulator.timer.scheduleInterrupt(timeslice, current);
+//                }else {
+//                    ProcessControlBlock switchedIn = ready.poll();
+//                    ProcessControlBlock switchedOut = Simulator.cpu.contextSwitch(switchedIn);
+//                    ready.add(switchedOut);
+//                    Simulator.timer.scheduleInterrupt(timeslice, switchedIn);
+//                }
+                ProcessControlBlock current = Simulator.cpu.getCurrentProcess();
+                if(current != null){
+                    ready.add(current);
+
+                    ProcessControlBlock switchedIn = ready.poll();
+                    Simulator.cpu.contextSwitch(switchedIn);
+                    Simulator.timer.scheduleInterrupt(timeslice, switchedIn);
+                }
                 break;
             case InterruptHandler.WAKE_UP:
                 int deviceId = (Integer)(varargs[0]);
@@ -55,6 +71,8 @@ public class KernelImp implements Kernel {
                 }
                 break;
         }
+
+        Simulator.timer.advanceKernelTime(SystemTimer.SYSCALL_COST);
     }
 
     @Override
