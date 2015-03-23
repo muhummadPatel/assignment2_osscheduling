@@ -45,11 +45,13 @@ public class SystemTimerImp implements SystemTimer {
     @Override
     public void advanceUserTime(long time) {
         this.userTime += time;
+        this.systemTime += time;
     }
 
     @Override
     public void advanceKernelTime(long time) {
         this.kernelTime += time;
+        this.systemTime += time;
     }
 
     @Override
