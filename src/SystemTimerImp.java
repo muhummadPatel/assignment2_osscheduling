@@ -63,4 +63,16 @@ public class SystemTimerImp implements SystemTimer {
     public void cancelInterrupt(int processID) {
         Simulator.eventQueue.removeTimeoutEvent(processID);
     }
+
+    public String toString(){
+        String timeStats = "";
+        timeStats += "System time: " + systemTime + "\n";
+        timeStats += "Kernel time: " + kernelTime + "\n";
+        timeStats += "User time: " + userTime + "\n";
+        timeStats += "Idle time: " + idleTime + "\n";
+        //TODO: # of context switches needs to be here too
+        timeStats += "CPU utilization: " + ((userTime / (systemTime * 1.0)) * 100);
+
+        return timeStats;
+    }
 }
