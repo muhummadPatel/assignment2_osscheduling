@@ -85,6 +85,15 @@ public class KernelImp implements Kernel {
             ProcessControlBlock relProcess = relQueue.remove(pos);
             relProcess.nextInstruction();
             ready.add(relProcess);
+
+            if(Simulator.cpu.isIdle()){
+                ProcessControlBlock switchedIn = ready.poll();
+                Simulator.cpu.contextSwitch(switchedIn);
+                Simulator.timer.advanceKernelTime(Simulator.dispatchOverhead);
+
+                int interruptTime = (int)Simulator.timer.getSystemTime() + SystemTimer.SYSCALL_COST + Simulator.dispatchOverhead + timeslice;
+                Simulator.timer.scheduleInterrupt(interruptTime, switchedIn);
+            }
         }
     }
 
@@ -100,7 +109,7 @@ public class KernelImp implements Kernel {
             case EXECVE:
                 //TODO: EXECVE
                 sys_execve((String)varargs[0]);
-                Simulator.timer.advanceKernelTime(Simulator.dispatchOverhead);
+
                 break;
             case IO_REQUEST:
                 //TODO: IO_REQUEST
@@ -161,8 +170,11 @@ public class KernelImp implements Kernel {
                 ProcessControlBlock next = ready.poll();
                 Simulator.cpu.contextSwitch(next);
 
+
                 int interruptTime = (int)Simulator.timer.getSystemTime() + SystemTimer.SYSCALL_COST + Simulator.dispatchOverhead + timeslice;
                 Simulator.timer.scheduleInterrupt(interruptTime, next);
+
+                Simulator.timer.advanceKernelTime(Simulator.dispatchOverhead);
             }
         }catch(FileNotFoundException e){
             System.out.println(e.getMessage() + "\nError loading program: " + programFilename);

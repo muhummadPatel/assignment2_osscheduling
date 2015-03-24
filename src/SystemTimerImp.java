@@ -54,6 +54,13 @@ public class SystemTimerImp implements SystemTimer {
         this.systemTime += time;
     }
 
+    public void reset(){
+        systemTime = 0;
+        idleTime = 0;
+        userTime = 0;
+        kernelTime = 0;
+    }
+
     @Override
     public void scheduleInterrupt(int timeUnits, ProcessControlBlock process) {
         Simulator.eventQueue.add(new TimeOutEvent(timeUnits, process));

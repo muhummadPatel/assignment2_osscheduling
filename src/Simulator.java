@@ -9,7 +9,7 @@ public class Simulator {
 
     static CPUImp cpu;
     static KernelImp kernel;
-    static SystemTimer timer;
+    static SystemTimerImp timer;
     static EventQueue eventQueue;
     static int dispatchOverhead;
 
@@ -36,7 +36,7 @@ public class Simulator {
                 }
             }
 
-            timer.setSystemTime(0);
+            timer.reset();
 
         }catch(FileNotFoundException e){
             System.out.println(e.getMessage() + "\nError opening file.");
@@ -52,8 +52,10 @@ public class Simulator {
 
             Event nextEvent = eventQueue.peek();
 
-            if (cpu.isIdle() && eventQueue.peek() != null) {
+            if (eventQueue.peek() != null) {
                 timer.setSystemTime(eventQueue.peek().getTime());
+            }else{
+                System.out.println("CANT");
             }
 
             while (nextEvent != null && nextEvent.getTime() <= timer.getSystemTime()) {
