@@ -60,10 +60,12 @@ public class EventQueue {
         boolean isRemoved = false;
         while(it.hasNext()){
             Event evt = (Event)it.next();
-            if(it instanceof TimeOutEvent && ((TimeOutEvent) it).getProcess().getPID() == pid){
-                //TODO: myprints System.out.println("Removed timeout event " + evt);
-                isRemoved = queue.remove(evt);
-                break;
+            if(evt instanceof TimeOutEvent){
+                if(((TimeOutEvent) evt).getProcess().getPID() == pid) {
+                    //TODO: myprints System.out.println("Removed timeout event " + evt);
+                    isRemoved = queue.remove(evt);
+                    break;
+                }
             }
         }
 
