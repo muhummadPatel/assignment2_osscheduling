@@ -34,46 +34,52 @@ public class KernelImp implements Kernel {
 //                    ready.add(switchedOut);
 //                    Simulator.timer.scheduleInterrupt(timeslice, switchedIn);
 //                }
-                ProcessControlBlock current = Simulator.cpu.getCurrentProcess();
-                if(current != null){
-                    ready.add(current);
-
-                    ProcessControlBlock switchedIn = ready.poll();
-                    Simulator.cpu.contextSwitch(switchedIn);
-                    Simulator.timer.scheduleInterrupt(timeslice, switchedIn);
-                }
+                interrupt_time_out();
                 break;
             case InterruptHandler.WAKE_UP:
-                int deviceId = (Integer)(varargs[0]);
-                int pid = (Integer)(varargs[1]);
-
-                LinkedList<ProcessControlBlock> relQueue = new LinkedList<ProcessControlBlock>();
-                for(IODeviceImp iod: devices){
-
-                    if(iod.getID() == deviceId){
-                        relQueue = iod.deviceQueue;
-                    }
-                }
-
-                int pos = -1;
-                for(int i = 0; i < relQueue.size(); i++){
-                    ProcessControlBlock pcb = relQueue.get(i);
-                    if(pcb.getPID() == pid){
-                        pos = i;
-                        break;
-                    }
-                }
-
-                if(pos != -1){
-                    ProcessControlBlock relProcess = relQueue.remove(pos);
-                    relProcess.nextInstruction();
-                    ready.add(relProcess);
-                }
+                interrupt_wake_up((Integer)(varargs[0]), (Integer)(varargs[1]));
                 break;
         }
 
         Simulator.timer.advanceKernelTime(SystemTimer.SYSCALL_COST);
     }
+
+    private void interrupt_time_out(){
+        ProcessControlBlock current = Simulator.cpu.getCurrentProcess();
+        if(current != null){
+            ready.add(current);
+
+            ProcessControlBlock switchedIn = ready.poll();
+            Simulator.cpu.contextSwitch(switchedIn);
+            Simulator.timer.scheduleInterrupt(timeslice, switchedIn);
+        }
+    }
+
+    private void interrupt_wake_up(int deviceId, int pid){
+        LinkedList<ProcessControlBlock> relQueue = new LinkedList<ProcessControlBlock>();
+        for(IODeviceImp iod: devices){
+
+            if(iod.getID() == deviceId){
+                relQueue = iod.deviceQueue;
+            }
+        }
+
+        int pos = -1;
+        for(int i = 0; i < relQueue.size(); i++){
+            ProcessControlBlock pcb = relQueue.get(i);
+            if(pcb.getPID() == pid){
+                pos = i;
+                break;
+            }
+        }
+
+        if(pos != -1){
+            ProcessControlBlock relProcess = relQueue.remove(pos);
+            relProcess.nextInstruction();
+            ready.add(relProcess);
+        }
+    }
+
 
     @Override
     public int syscall(int number, Object... varargs) {
@@ -87,12 +93,12 @@ public class KernelImp implements Kernel {
                 break;
             case IO_REQUEST:
                 //TODO: IO_REQUEST
-                System.out.println("syscall IO REQ");
+                //TODO: myprints System.out.println("syscall IO REQ");
                 sys_io_request((Integer)(varargs[0]), (Integer)(varargs[1]));
                 break;
             case TERMINATE_PROCESS:
                 //TODO: TERMINATE PROCESS
-                System.out.println("syscall TERMINATE PROC");
+                //TODO: myprints System.out.println("syscall TERMINATE PROC");
                 sys_terminate_process();
                 break;
             default:
@@ -108,8 +114,8 @@ public class KernelImp implements Kernel {
         IODeviceImp dev = new IODeviceImp(deviceId, deviceType);
         devices.add(dev);
 
-        System.out.println(dev);
-        System.out.println(devices.size());
+        //TODO: myprints System.out.println(dev);
+        //TODO: myprints System.out.println(devices.size());
     }
 
     private void sys_execve(String programFilename){
@@ -117,7 +123,7 @@ public class KernelImp implements Kernel {
             Scanner program = new Scanner(new FileReader(programFilename));
             ProcessControlBlockImp pcb = new ProcessControlBlockImp(programFilename);
 
-            System.out.println("\nLOADING PROG: " + programFilename);
+            //TODO: myprints System.out.println("\nLOADING PROG: " + programFilename);
             while(program.hasNext()){
 
                 String[] data = program.nextLine().trim().split("\\s+");
@@ -134,7 +140,7 @@ public class KernelImp implements Kernel {
                 }
             }
             ready.add(pcb);
-            System.out.println("Added " + pcb.getNumInstructions() + " instructions to it. rQsiz: " + ready.size());
+            //TODO: myprints System.out.println("Added " + pcb.getNumInstructions() + " instructions to it. rQsiz: " + ready.size());
 
         }catch(FileNotFoundException e){
             System.out.println(e.getMessage() + "\nError loading program: " + programFilename);
