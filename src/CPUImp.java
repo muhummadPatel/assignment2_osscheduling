@@ -38,6 +38,8 @@ public class CPUImp implements CPU {
 
             if (remainder >= 0) {
                 //completed so move to next instruction
+
+                Simulator.timer.advanceUserTime(timeUnits - remainder);
                 if (currentProcess.hasNextInstruction()) {
                     currentProcess.nextInstruction();
                     //has next
@@ -48,8 +50,11 @@ public class CPUImp implements CPU {
                     Simulator.kernel.syscall(SystemCall.TERMINATE_PROCESS);
                 }
 
+
                 unusedTimeUnits = remainder;
             }else{
+                //not completed, so move usertime ahead by entire allocation
+                Simulator.timer.advanceUserTime(timeUnits);
                 unusedTimeUnits = 0;
             }
 
@@ -59,7 +64,7 @@ public class CPUImp implements CPU {
             unusedTimeUnits = timeUnits;
         }
 
-        Simulator.timer.advanceUserTime(timeUnits - unusedTimeUnits);
+
         return unusedTimeUnits;
     }
 
@@ -68,7 +73,7 @@ public class CPUImp implements CPU {
         ProcessControlBlock switchedOut = this.currentProcess;
         currentProcess = process;
 
-        Simulator.timer.advanceKernelTime(Simulator.dispatchOverhead);
+        System.out.printf("Time: %010d Context Switch(%s, %s)\n", Simulator.timer.getSystemTime(), switchedOut, currentProcess);
         return switchedOut;
     }
 

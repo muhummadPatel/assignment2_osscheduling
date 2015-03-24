@@ -25,7 +25,7 @@ public class Simulator {
             while(infile.hasNext()){
                 String[] data = infile.nextLine().trim().split("\\s+");
 
-                if(data[0].equalsIgnoreCase("I/O") || data[0].equalsIgnoreCase("I/O")){
+                if(data[0].equalsIgnoreCase("I/O") || data[0].equalsIgnoreCase("I/O") || data[0].equalsIgnoreCase("DEVICE")){
                     //MAKE_DEVICE system call to kernel
                     kernel.syscall(SystemCall.MAKE_DEVICE, data[1], data[2]);
                 }else if(data[0].equalsIgnoreCase("PROGRAM")){
@@ -47,19 +47,29 @@ public class Simulator {
 
     public static void runSimulation(){
         //TODO: myprints System.out.println("\n\n\nLOOOOOOOOPPPPP");
-        while(!(eventQueue.isEmpty() && cpu.isIdle())){
-            //TODO: myprints System.out.println("looopstart. ==================================");
+        while(!(eventQueue.isEmpty() && cpu.isIdle())) {
+            System.out.println("looopstart. ==================================");
 
-            Event nextEvent = eventQueue.poll();
-            if(nextEvent != null){
-                nextEvent.process();
+            Event nextEvent = eventQueue.peek();
+
+            if (cpu.isIdle() && eventQueue.peek() != null) {
+                timer.setSystemTime(eventQueue.peek().getTime());
             }
 
-            //TODO: fix this madness
-            //int nextEventTime = (int)eventQueue.peek().getTime();
-            cpu.execute(5);
+            while (nextEvent != null && nextEvent.getTime() <= timer.getSystemTime()) {
+                //we have an event to process so process it
+
+                eventQueue.poll();
+                nextEvent.process();
+
+                nextEvent = eventQueue.peek();
+            }
+
+            long unusedTime = 0;
+            cpu.execute(kernel.timeslice);
             //TODO: myprints System.out.println("looopend. ==================================\n\n\n");
         }
+
 
         System.out.println(timer);
     }

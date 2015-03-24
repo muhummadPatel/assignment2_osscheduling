@@ -20,7 +20,8 @@ public class KernelImp implements Kernel {
 
     @Override
     public void interrupt(int interruptType, Object... varargs) {
-        //TODO: break these out into methods
+        interruptTrace(interruptType, varargs);
+
         switch(interruptType){
             case InterruptHandler.TIME_OUT:
 //                if (ready.isEmpty()) {
@@ -35,6 +36,7 @@ public class KernelImp implements Kernel {
 //                    Simulator.timer.scheduleInterrupt(timeslice, switchedIn);
 //                }
                 interrupt_time_out();
+                Simulator.timer.advanceKernelTime(Simulator.dispatchOverhead);
                 break;
             case InterruptHandler.WAKE_UP:
                 interrupt_wake_up((Integer) (varargs[0]), (Integer) (varargs[1]));
@@ -42,6 +44,8 @@ public class KernelImp implements Kernel {
         }
 
         Simulator.timer.advanceKernelTime(SystemTimer.SYSCALL_COST);
+
+        System.out.printf("Time: %010d Kernel exit\n", Simulator.timer.getSystemTime());
     }
 
     private void interrupt_time_out(){
@@ -87,6 +91,8 @@ public class KernelImp implements Kernel {
 
     @Override
     public int syscall(int number, Object... varargs) {
+        sysCallTrace(number, varargs);
+
         switch(number){
             case MAKE_DEVICE:
                 sys_make_device(Integer.parseInt((String) varargs[0]), (String) varargs[1]);
@@ -94,22 +100,27 @@ public class KernelImp implements Kernel {
             case EXECVE:
                 //TODO: EXECVE
                 sys_execve((String)varargs[0]);
+                Simulator.timer.advanceKernelTime(Simulator.dispatchOverhead);
                 break;
             case IO_REQUEST:
                 //TODO: IO_REQUEST
                 //TODO: myprints System.out.println("syscall IO REQ");
                 sys_io_request((Integer)(varargs[0]), (Integer)(varargs[1]));
+                Simulator.timer.advanceKernelTime(Simulator.dispatchOverhead);
                 break;
             case TERMINATE_PROCESS:
                 //TODO: TERMINATE PROCESS
                 //TODO: myprints System.out.println("syscall TERMINATE PROC");
                 sys_terminate_process();
+                Simulator.timer.advanceKernelTime(Simulator.dispatchOverhead);
                 break;
             default:
                 return 1;
         }
 
         Simulator.timer.advanceKernelTime(SystemTimer.SYSCALL_COST);
+
+        System.out.printf("Time: %010d Kernel exit\n", Simulator.timer.getSystemTime());
         return 0;
     }
 
@@ -143,9 +154,16 @@ public class KernelImp implements Kernel {
                     pcb.addInstruction(new IOInstruction(instructionDuration, deviceId));
                 }
             }
+
             ready.add(pcb);
             //TODO: myprints System.out.println("Added " + pcb.getNumInstructions() + " instructions to it. rQsiz: " + ready.size());
+            if(Simulator.cpu.isIdle()){
+                ProcessControlBlock next = ready.poll();
+                Simulator.cpu.contextSwitch(next);
 
+                int interruptTime = (int)Simulator.timer.getSystemTime() + SystemTimer.SYSCALL_COST + Simulator.dispatchOverhead + timeslice;
+                Simulator.timer.scheduleInterrupt(interruptTime, next);
+            }
         }catch(FileNotFoundException e){
             System.out.println(e.getMessage() + "\nError loading program: " + programFilename);
         }
@@ -177,8 +195,8 @@ public class KernelImp implements Kernel {
 
         ProcessControlBlock next = ready.poll();
         Simulator.cpu.contextSwitch(next);
-
         if(next != null){
+
             int interruptTime = (int)Simulator.timer.getSystemTime() + SystemTimer.SYSCALL_COST + Simulator.dispatchOverhead + timeslice;
             Simulator.timer.scheduleInterrupt(interruptTime, next);
         }
@@ -190,5 +208,41 @@ public class KernelImp implements Kernel {
 
     public void addToReady(ProcessControlBlock pcb) {
         ready.add(pcb);
+    }
+
+    private void sysCallTrace(int number, Object... varargs) {
+        String details=null;
+        switch (number) {
+            case MAKE_DEVICE:
+                details=String.format("MAKE_DEVICE, %s,\"%s\"", varargs[0], varargs[1]);
+                break;
+            case EXECVE:
+                details=String.format("EXECVE, \"%s\"", varargs[0]);
+                break;
+            case IO_REQUEST:
+                details=String.format("IO_REQUEST, %s, %s", varargs[0], varargs[1]);
+                break;
+            case TERMINATE_PROCESS:
+                details="TERMINATE_PROCESS";
+                break;
+            default:
+                details="ERROR_UNKNOWN_NUMBER";
+        }
+        System.out.printf("Time: %010d SysCall(%s)\n", Simulator.timer.getSystemTime(), details);
+    }
+
+    private void interruptTrace(int interruptType, Object... varargs) {
+        String details = null;
+        switch (interruptType) {
+            case TIME_OUT:
+                details=String.format("TIME_OUT, %s", varargs[0]);
+                break;
+            case WAKE_UP:
+                details=String.format("WAKE_UP, %s, %s", varargs[0], varargs[1]);
+                break;
+            default:
+                details="ERROR_UNKNOWN_NUMBER";
+        }
+        System.out.printf("Time: %010d Interrupt(%s)\n", Simulator.timer.getSystemTime(), details);
     }
 }

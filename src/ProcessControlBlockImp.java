@@ -5,7 +5,7 @@ import java.util.LinkedList;
  */
 public class ProcessControlBlockImp implements ProcessControlBlock {
 
-    private static int count = 0;
+    private static int count = 1;
     private int pid;
     private String programName;
     private LinkedList<Instruction> instructions;
@@ -63,8 +63,7 @@ public class ProcessControlBlockImp implements ProcessControlBlock {
         this.state = state;
     }
 
-    //TODO: remove
-    public int getNumInstructions() {
-        return instructions.size();
+    public String toString() {
+        return String.format("{%d, %s}", this.getPID(), this.getProgramName());
     }
 }
