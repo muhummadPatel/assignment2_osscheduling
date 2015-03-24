@@ -68,6 +68,7 @@ public class CPUImp implements CPU {
         ProcessControlBlock switchedOut = this.currentProcess;
         currentProcess = process;
 
+        Simulator.timer.advanceKernelTime(Simulator.dispatchOverhead);
         return switchedOut;
     }
 
