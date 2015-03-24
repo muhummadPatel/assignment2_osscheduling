@@ -14,7 +14,7 @@ public class TimeOutEvent extends Event {
      */
     public TimeOutEvent(long systemTime, ProcessControlBlock process) {
         super(systemTime);
-        System.out.println("COnstructing timeoutevt for process " + process.getProgramName());
+        //TODO: myprints System.out.println("COnstructing timeoutevt for process " + process.getProgramName());
         this.process=process;
     }
     
@@ -25,7 +25,7 @@ public class TimeOutEvent extends Event {
 
     @Override
     public void process() {
-        System.out.println("process timeoutevt for " + process.getProgramName());
+        //TODO: myprints System.out.println("process timeoutevt for " + process.getProgramName());
         //TODO: don't really need pid do we
         Simulator.kernel.interrupt(InterruptHandler.TIME_OUT, process.getPID());
     }

@@ -30,8 +30,8 @@ public class Simulator {
                 }else if(data[0].equalsIgnoreCase("PROGRAM")){
                     //create load program evt and insert into evt queue
                     eventQueue.add(new ExecveEvent(Long.parseLong(data[1]), data[2]));
-                    System.out.println("Execve evt added to queue." + eventQueue.peek());
-                    System.out.println("Qsiz: " + eventQueue.size());
+                    //TODO: myprints System.out.println("Execve evt added to queue." + eventQueue.peek());
+                    //TODO: myprints System.out.println("Qsiz: " + eventQueue.size());
                 }
             }
 
@@ -41,13 +41,13 @@ public class Simulator {
             System.out.println(e.getMessage() + "\nError opening file.");
             System.exit(1);
         }
-        System.out.println("completed " + timer.getSystemTime());
+        //TODO: myprints System.out.println("completed " + timer.getSystemTime());
     }
 
     public static void runSimulation(){
-        System.out.println("\n\n\nLOOOOOOOOPPPPP");
+        //TODO: myprints System.out.println("\n\n\nLOOOOOOOOPPPPP");
         while(!(eventQueue.isEmpty() && cpu.isIdle())){
-            System.out.println("looopstart. ==================================");
+            //TODO: myprints System.out.println("looopstart. ==================================");
 
             Event nextEvent = eventQueue.poll();
             if(nextEvent != null){
@@ -57,7 +57,7 @@ public class Simulator {
             //TODO: fix this madness
             //int nextEventTime = (int)eventQueue.peek().getTime();
             cpu.execute(5);
-            System.out.println("looopend. ==================================\n\n\n");
+            //TODO: myprints System.out.println("looopend. ==================================\n\n\n");
         }
     }
 

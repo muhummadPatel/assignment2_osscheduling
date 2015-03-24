@@ -31,10 +31,10 @@ public class CPUImp implements CPU {
 
         if(currentProcess != null) {
             //we have a process to execute
-            System.out.println("EXECUTE " + currentProcess.getProgramName());
+            //TODO: myprints System.out.println("EXECUTE " + currentProcess.getProgramName());
 
             int remainder = ((CPUInstruction) currentProcess.getInstruction()).execute(timeUnits);
-            System.out.println("Unused time = " + remainder);
+            //TODO: myprints System.out.println("Unused time = " + remainder);
 
             if (remainder >= 0) {
                 //completed so move to next instruction
@@ -54,7 +54,7 @@ public class CPUImp implements CPU {
             }
 
         }else{
-            System.out.println("nothing to execute.");
+            //TODO: myprints System.out.println("nothing to execute.");
             //TODO: increment idle time here?
             unusedTimeUnits = timeUnits;
         }
