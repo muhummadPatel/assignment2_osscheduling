@@ -37,7 +37,7 @@ public class KernelImp implements Kernel {
                 interrupt_time_out();
                 break;
             case InterruptHandler.WAKE_UP:
-                interrupt_wake_up((Integer)(varargs[0]), (Integer)(varargs[1]));
+                interrupt_wake_up((Integer) (varargs[0]), (Integer) (varargs[1]));
                 break;
         }
 
@@ -50,8 +50,12 @@ public class KernelImp implements Kernel {
             ready.add(current);
 
             ProcessControlBlock switchedIn = ready.poll();
+
             Simulator.cpu.contextSwitch(switchedIn);
-            Simulator.timer.scheduleInterrupt(timeslice, switchedIn);
+            if(switchedIn != null) {
+                int interruptTime = (int)Simulator.timer.getSystemTime() + SystemTimer.SYSCALL_COST + Simulator.dispatchOverhead + timeslice;
+                Simulator.timer.scheduleInterrupt(interruptTime, switchedIn);
+            }
         }
     }
 
@@ -162,7 +166,8 @@ public class KernelImp implements Kernel {
         ProcessControlBlock next = ready.poll();
         Simulator.cpu.contextSwitch(next);
         if(next != null){
-            Simulator.timer.scheduleInterrupt(timeslice, next);
+            int interruptTime = (int)Simulator.timer.getSystemTime() + SystemTimer.SYSCALL_COST + Simulator.dispatchOverhead + timeslice;
+            Simulator.timer.scheduleInterrupt(interruptTime, next);
         }
     }
 
@@ -174,7 +179,8 @@ public class KernelImp implements Kernel {
         Simulator.cpu.contextSwitch(next);
 
         if(next != null){
-            Simulator.timer.scheduleInterrupt(timeslice, next);
+            int interruptTime = (int)Simulator.timer.getSystemTime() + SystemTimer.SYSCALL_COST + Simulator.dispatchOverhead + timeslice;
+            Simulator.timer.scheduleInterrupt(interruptTime, next);
         }
     }
 
