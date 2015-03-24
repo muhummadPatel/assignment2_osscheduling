@@ -11,6 +11,7 @@ public class Simulator {
     static KernelImp kernel;
     static SystemTimer timer;
     static EventQueue eventQueue;
+    static int dispatchOverhead;
 
     public static void setUp(String configFilename, int sliceLength){
         kernel = new KernelImp(sliceLength);
@@ -59,13 +60,15 @@ public class Simulator {
             cpu.execute(5);
             //TODO: myprints System.out.println("looopend. ==================================\n\n\n");
         }
+
+        System.out.println(timer);
     }
 
     public static void main(String[] args) {
         //TODO: handle invalid args here
         String configFilename = args[0];
         int sliceLength = (int)Double.parseDouble(args[1]);
-        int dispatchOverhead =(int)Double.parseDouble(args[2]);
+        dispatchOverhead =(int)Double.parseDouble(args[2]);
 
         setUp(configFilename, sliceLength);
         runSimulation();
