@@ -40,6 +40,7 @@ public class CPUImp implements CPU {
                 //completed so move to next instruction
 
                 Simulator.timer.advanceUserTime(timeUnits - remainder);
+
                 if (currentProcess.hasNextInstruction()) {
                     currentProcess.nextInstruction();
                     //has next
@@ -73,7 +74,9 @@ public class CPUImp implements CPU {
         ProcessControlBlock switchedOut = this.currentProcess;
         currentProcess = process;
 
-        System.out.printf("Time: %010d Context Switch(%s, %s)\n", Simulator.timer.getSystemTime(), switchedOut, currentProcess);
+        String out = (switchedOut == null)? "{Idle}" : switchedOut.toString();
+        String in = (currentProcess == null)? "{Idle}" : currentProcess.toString();
+        System.out.printf("Time: %010d Context Switch(%s, %s)\n", Simulator.timer.getSystemTime(), out, in);
         return switchedOut;
     }
 

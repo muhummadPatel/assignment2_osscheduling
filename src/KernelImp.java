@@ -218,10 +218,6 @@ public class KernelImp implements Kernel {
         return ready.poll();
     }
 
-    public void addToReady(ProcessControlBlock pcb) {
-        ready.add(pcb);
-    }
-
     private void sysCallTrace(int number, Object... varargs) {
         String details=null;
         switch (number) {

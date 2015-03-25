@@ -48,14 +48,12 @@ public class Simulator {
     public static void runSimulation(){
         //TODO: myprints System.out.println("\n\n\nLOOOOOOOOPPPPP");
         while(!(eventQueue.isEmpty() && cpu.isIdle())) {
-            System.out.println("looopstart. ==================================");
+            //System.out.println("looopstart. ==================================");
 
             Event nextEvent = eventQueue.peek();
 
             if (eventQueue.peek() != null) {
                 timer.setSystemTime(eventQueue.peek().getTime());
-            }else{
-                System.out.println("CANT");
             }
 
             while (nextEvent != null && nextEvent.getTime() <= timer.getSystemTime()) {
@@ -68,7 +66,12 @@ public class Simulator {
             }
 
             long unusedTime = 0;
-            cpu.execute(kernel.timeslice);
+            while(eventQueue.peek() != null && eventQueue.peek().getTime() > timer.getSystemTime()){
+                cpu.execute((int)(eventQueue.peek().getTime() - timer.getSystemTime()));
+            }
+//            else {
+//                cpu.execute(kernel.timeslice);
+//            }
             //TODO: myprints System.out.println("looopend. ==================================\n\n\n");
         }
 
