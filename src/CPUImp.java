@@ -4,6 +4,7 @@
 public class CPUImp implements CPU {
 
     ProcessControlBlock currentProcess;
+    int numContextSwitches = 0;
 
     public CPUImp(){
         currentProcess = null;
@@ -24,17 +25,16 @@ public class CPUImp implements CPU {
            ProcessControlBlock next = Simulator.kernel.nextProcess();
            if(next != null){
                //something to execute, so switch it in
-               //TODO: if timing is off, try just doing this manually
                Simulator.cpu.contextSwitch(next);
            }
        }
 
         if(currentProcess != null) {
             //we have a process to execute
-            //TODO: myprints System.out.println("EXECUTE " + currentProcess.getProgramName());
+
 
             int remainder = ((CPUInstruction) currentProcess.getInstruction()).execute(timeUnits);
-            //TODO: myprints System.out.println("Unused time = " + remainder);
+
 
             if (remainder >= 0) {
                 //completed so move to next instruction
@@ -60,8 +60,8 @@ public class CPUImp implements CPU {
             }
 
         }else{
-            //TODO: myprints System.out.println("nothing to execute.");
-            //TODO: increment idle time here?
+
+
             unusedTimeUnits = timeUnits;
         }
 
@@ -71,6 +71,8 @@ public class CPUImp implements CPU {
 
     @Override
     public ProcessControlBlock contextSwitch(ProcessControlBlock process) {
+        numContextSwitches++;
+
         ProcessControlBlock switchedOut = this.currentProcess;
         currentProcess = process;
 

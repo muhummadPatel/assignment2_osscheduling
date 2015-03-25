@@ -62,7 +62,7 @@ public class EventQueue {
             Event evt = (Event)it.next();
             if(evt instanceof TimeOutEvent){
                 if(((TimeOutEvent) evt).getProcess().getPID() == pid) {
-                    //TODO: myprints System.out.println("Removed timeout event " + evt);
+
                     isRemoved = queue.remove(evt);
                     break;
                 }

@@ -107,19 +107,19 @@ public class KernelImp implements Kernel {
                 sys_make_device(Integer.parseInt((String) varargs[0]), (String) varargs[1]);
                 break;
             case EXECVE:
-                //TODO: EXECVE
+
                 sys_execve((String)varargs[0]);
 
                 break;
             case IO_REQUEST:
-                //TODO: IO_REQUEST
-                //TODO: myprints System.out.println("syscall IO REQ");
+
+
                 sys_io_request((Integer)(varargs[0]), (Integer)(varargs[1]));
                 Simulator.timer.advanceKernelTime(Simulator.dispatchOverhead);
                 break;
             case TERMINATE_PROCESS:
-                //TODO: TERMINATE PROCESS
-                //TODO: myprints System.out.println("syscall TERMINATE PROC");
+
+
                 sys_terminate_process();
                 Simulator.timer.advanceKernelTime(Simulator.dispatchOverhead);
                 break;
@@ -133,13 +133,13 @@ public class KernelImp implements Kernel {
         return 0;
     }
 
-    //TODO: make these return int?
+
     private void sys_make_device(int deviceId, String deviceType){
         IODeviceImp dev = new IODeviceImp(deviceId, deviceType);
         devices.add(dev);
 
-        //TODO: myprints System.out.println(dev);
-        //TODO: myprints System.out.println(devices.size());
+
+
     }
 
     private void sys_execve(String programFilename){
@@ -147,7 +147,7 @@ public class KernelImp implements Kernel {
             Scanner program = new Scanner(new FileReader(programFilename));
             ProcessControlBlockImp pcb = new ProcessControlBlockImp(programFilename);
 
-            //TODO: myprints System.out.println("\nLOADING PROG: " + programFilename);
+
             while(program.hasNext()){
 
                 String[] data = program.nextLine().trim().split("\\s+");
@@ -165,7 +165,7 @@ public class KernelImp implements Kernel {
             }
 
             ready.add(pcb);
-            //TODO: myprints System.out.println("Added " + pcb.getNumInstructions() + " instructions to it. rQsiz: " + ready.size());
+
             if(Simulator.cpu.isIdle()){
                 ProcessControlBlock next = ready.poll();
                 Simulator.cpu.contextSwitch(next);

@@ -33,7 +33,7 @@ public class ProcessControlBlockImp implements ProcessControlBlock {
 
     @Override
     public Instruction getInstruction() {
-        //TODO: myprints System.out.println(programName + " pc=" + programCounter);
+
         Instruction instruction = instructions.get(programCounter);
         return instruction;
     }
