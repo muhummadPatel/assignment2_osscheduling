@@ -3,11 +3,10 @@
  */
 public class SystemTimerImp implements SystemTimer {
 
-    private long systemTime, idleTime, userTime, kernelTime;
+    private long systemTime, userTime, kernelTime;
 
     public SystemTimerImp(){
         systemTime = 0;
-        idleTime = 0;
         userTime = 0;
         kernelTime = 0;
     }
@@ -19,7 +18,7 @@ public class SystemTimerImp implements SystemTimer {
 
     @Override
     public long getIdleTime() {
-        return idleTime;
+        return systemTime - (userTime + kernelTime);
     }
 
     @Override
@@ -56,7 +55,6 @@ public class SystemTimerImp implements SystemTimer {
 
     public void reset(){
         systemTime = 0;
-        idleTime = 0;
         userTime = 0;
         kernelTime = 0;
     }
@@ -76,9 +74,9 @@ public class SystemTimerImp implements SystemTimer {
         timeStats += "System time: " + systemTime + "\n";
         timeStats += "Kernel time: " + kernelTime + "\n";
         timeStats += "User time: " + userTime + "\n";
-        timeStats += "Idle time: " + idleTime + "\n";
-        //TODO: # of context switches needs to be here too
-        timeStats += "CPU utilization: " + ((userTime / (systemTime * 1.0)) * 100);
+        timeStats += "Idle time: " + getIdleTime() + "\n";
+        timeStats += "Context switches: " + Simulator.cpu.numContextSwitches + "\n";
+        timeStats += String.format("CPU utilization: %5.2f", ((userTime / (systemTime * 1.0)) * 100));
 
         return timeStats;
     }
