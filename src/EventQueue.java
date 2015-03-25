@@ -55,14 +55,21 @@ public class EventQueue {
         return queue.size();
     }
 
+    /**
+     * Remove a timeoutEvt from the eventQueue.
+     *
+     * @param pid processID of the timeoutEvt to be removed
+     * @return true if removed
+     */
     public boolean removeTimeoutEvent(int pid){
-        Iterator it = queue.iterator();
         boolean isRemoved = false;
+
+        Iterator it = queue.iterator();
         while(it.hasNext()){
             Event evt = (Event)it.next();
+
             if(evt instanceof TimeOutEvent){
                 if(((TimeOutEvent) evt).getProcess().getPID() == pid) {
-
                     isRemoved = queue.remove(evt);
                     break;
                 }

@@ -1,4 +1,3 @@
-
 /**
  * Interface to the simulated kernel.
  * 

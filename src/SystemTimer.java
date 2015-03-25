@@ -1,4 +1,3 @@
-
 /**
  * A SystemTimer (i) provides support for simulated time, and (ii) support for
  * the setting of timeout interrupts by kernel code. 

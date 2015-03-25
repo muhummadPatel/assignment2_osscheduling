@@ -1,4 +1,3 @@
-
 /**
  * An Execve event represents the creation of a program execution.
  * 
@@ -13,8 +12,7 @@ public class ExecveEvent extends Event {
         super(startTime);
         this.progName=progName;
     }
-        
-    
+
     /**
      * Obtain the name of the program that must be run.
      */
@@ -39,5 +37,4 @@ public class ExecveEvent extends Event {
     }
 
     public String toString() { return "ExecveEvent("+this.getTime()+", "+this.getProgramName()+")"; }
-
 }

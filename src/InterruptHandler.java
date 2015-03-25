@@ -1,4 +1,3 @@
-
 /**
  * Interface for kernel component that handles interrupts representing kernel events
  * such as timeouts and completion of device I/O operations.

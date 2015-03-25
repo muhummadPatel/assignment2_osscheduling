@@ -34,6 +34,4 @@ public class CPUInstruction extends Instruction {
         }
         return remainder;
     }
-        
-    
 }

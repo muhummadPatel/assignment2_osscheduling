@@ -1,5 +1,6 @@
 /**
- * Created by ptlmuh006 on 2015/03/20
+ * Implementation of the PCU interface. This class simulates the behaviour of a CPU. it allows the kernel to switch
+ * processes on and off (using the contextSwitch method) and to execute the current process.
  */
 public class CPUImp implements CPU {
 
@@ -15,60 +16,59 @@ public class CPUImp implements CPU {
         return currentProcess;
     }
 
+    //simulates execution of the current process for the given number of timeunits
     @Override
     public int execute(int timeUnits) {
 
         int unusedTimeUnits = 0;
 
+        //if there is nothing currently on the cpu
        if(currentProcess == null){
-           //load next process if available
+           //try to get the next scheduled process
            ProcessControlBlock next = Simulator.kernel.nextProcess();
+
            if(next != null){
-               //something to execute, so switch it in
+               //there is something scheduled, so load it on
                Simulator.cpu.contextSwitch(next);
            }
        }
 
         if(currentProcess != null) {
-            //we have a process to execute
+            //we have a process to execute, so execute it
 
-
+            //execute the current instruction
             int remainder = ((CPUInstruction) currentProcess.getInstruction()).execute(timeUnits);
 
-
             if (remainder >= 0) {
-                //completed so move to next instruction
+                //instruction completed so move to next instruction, if available
 
+                //increase userTime by amount spent doing the instruction
                 Simulator.timer.advanceUserTime(timeUnits - remainder);
 
                 if (currentProcess.hasNextInstruction()) {
                     currentProcess.nextInstruction();
-                    //has next
+                    //next instruction exists, so do it
                     IOInstruction ioInstruction = (IOInstruction) (currentProcess.getInstruction());
                     Simulator.kernel.syscall(SystemCall.IO_REQUEST, ioInstruction.getDeviceID(), ioInstruction.getDuration());
                 } else {
-                    //no next
+                    //no next instruction available, so terminate the process
                     Simulator.kernel.syscall(SystemCall.TERMINATE_PROCESS);
                 }
 
-
                 unusedTimeUnits = remainder;
             }else{
-                //not completed, so move usertime ahead by entire allocation
+                //instruction did not complete, so move userTime ahead by entire allocation
                 Simulator.timer.advanceUserTime(timeUnits);
                 unusedTimeUnits = 0;
             }
-
         }else{
-
-
             unusedTimeUnits = timeUnits;
         }
-
 
         return unusedTimeUnits;
     }
 
+    //simulates a context switch (swapping in/out processes)
     @Override
     public ProcessControlBlock contextSwitch(ProcessControlBlock process) {
         numContextSwitches++;
@@ -82,6 +82,7 @@ public class CPUImp implements CPU {
         return switchedOut;
     }
 
+    //returns true if the CPU is doing nothing
     @Override
     public boolean isIdle() {
         return (currentProcess == null);

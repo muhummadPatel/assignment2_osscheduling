@@ -1,8 +1,7 @@
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * muhummad        15/03/19.
+ * Implementation of the IODevice class. This class simulates an IO device.
  */
 public class IODeviceImp implements IODevice {
 
@@ -10,12 +9,10 @@ public class IODeviceImp implements IODevice {
     private String name;
     private long freeTime;
 
+    //the device queue to hold devices waiting to use this device.
     LinkedList<ProcessControlBlock> deviceQueue = new LinkedList<ProcessControlBlock>();
 
-    public IODeviceImp(){
-        this(-1, "nulldev");
-    }
-
+    //Constructor method to set up this device
     public IODeviceImp(int id, String name){
         this.id = id;
         this.name = name;
@@ -35,6 +32,8 @@ public class IODeviceImp implements IODevice {
     @Override
     public long getFreeTime() { return freeTime;}
 
+    //places the given process on the deviceQueue and updates the freetime of the device.
+    //returns the time at which the device will free up again.
     @Override
     public long requestIO(int duration, ProcessControlBlock process) {
         deviceQueue.add(process);

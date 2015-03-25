@@ -1,4 +1,3 @@
-
 /**
  * Representation of an I/O device and queue.
  * 
@@ -11,7 +10,6 @@ public interface IODevice {
      * Obtain the device ID. 
      */
     int getID();
-    
     
     /**
      * Obtain the device type name.

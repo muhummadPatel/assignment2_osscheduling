@@ -1,4 +1,3 @@
-
 /**
  * Abstract class Event - write a description of the class here
  * 
