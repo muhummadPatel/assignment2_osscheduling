@@ -31,8 +31,8 @@ public class Simulator {
                 }else if(data[0].equalsIgnoreCase("PROGRAM")){
                     //create load program evt and insert into evt queue
                     eventQueue.add(new ExecveEvent(Long.parseLong(data[1]), data[2]));
-                    //TODO: myprints System.out.println("Execve evt added to queue." + eventQueue.peek());
-                    //TODO: myprints System.out.println("Qsiz: " + eventQueue.size());
+
+
                 }
             }
 
@@ -42,13 +42,13 @@ public class Simulator {
             System.out.println(e.getMessage() + "\nError opening file.");
             System.exit(1);
         }
-        //TODO: myprints System.out.println("completed " + timer.getSystemTime());
+
     }
 
     public static void runSimulation(){
-        //TODO: myprints System.out.println("\n\n\nLOOOOOOOOPPPPP");
+
         while(!(eventQueue.isEmpty() && cpu.isIdle())) {
-            //System.out.println("looopstart. ==================================");
+            System.out.println("looopstart. ==================================");
 
             Event nextEvent = eventQueue.peek();
 
@@ -58,6 +58,7 @@ public class Simulator {
 
             while (nextEvent != null && nextEvent.getTime() <= timer.getSystemTime()) {
                 //we have an event to process so process it
+                //System.out.println("l1");
 
                 eventQueue.poll();
                 nextEvent.process();
@@ -66,13 +67,10 @@ public class Simulator {
             }
 
             long unusedTime = 0;
-            while(eventQueue.peek() != null && eventQueue.peek().getTime() > timer.getSystemTime()){
+            while(eventQueue.peek() != null && eventQueue.peek().getTime() > timer.getSystemTime() && !cpu.isIdle()){
+                //System.out.println("l2");
                 cpu.execute((int)(eventQueue.peek().getTime() - timer.getSystemTime()));
             }
-//            else {
-//                cpu.execute(kernel.timeslice);
-//            }
-            //TODO: myprints System.out.println("looopend. ==================================\n\n\n");
         }
 
 
@@ -80,7 +78,7 @@ public class Simulator {
     }
 
     public static void main(String[] args) {
-        //TODO: handle invalid args here
+
         String configFilename = args[0];
         int sliceLength = (int)Double.parseDouble(args[1]);
         dispatchOverhead =(int)Double.parseDouble(args[2]);
